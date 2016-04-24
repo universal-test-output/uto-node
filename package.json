@@ -1,0 +1,22 @@
+{
+  "name": "uto-node",
+  "version": "1.0.0",
+  "description": "Universal Test Output consumer and summarizer",
+  "author": "Thomas Ingram",
+  "license": "MIT",
+  "homepage": "https://github.com/universal-test-output/uto-node",
+  "keywords": [
+    "uto"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/universal-test-output/uto-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/universal-test-output/uto-node/issues"
+  },
+  "main": "source/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
