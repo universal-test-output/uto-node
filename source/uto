@@ -1,8 +1,30 @@
 #! /usr/bin/env node
 
+const Args = require('arg-parser');
+
 const uto = require('./index');
 
-const format = require('./formatters/simple');
+const formatters = require('./formatters');
+const formatterNames = Object.keys(formatters);
 
-process.stdin.setEncoding('utf8');
-format(uto(process.stdin));
+const package = require('../package');
+const args = new Args(package.name, package.version, package.description, 'Process UTO and output it in several formats, including TAP. Also available programatically');
+
+args.add({
+	name: 'format',
+	description: `output format. specify one of: ${formatterNames.join(', ')}`,
+	switches: [ '-f', '--format' ],
+	value: 'format',
+	default: formatterNames[0]
+});
+
+if (args.parse()) {
+	const format = formatters[args.params.format];
+
+	if (format) {
+		process.stdin.setEncoding('utf8');
+		format(uto(process.stdin));
+	} else {
+		console.error('Invalid format selected. Use `--help` to see list of valid formats.');
+	}
+}
