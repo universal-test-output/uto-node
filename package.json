@@ -16,10 +16,14 @@
     "url": "https://github.com/universal-test-output/uto-node/issues"
   },
   "main": "source/index.js",
+  "bin": {
+    "uto": "source/uto"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "chalk": "^1.1.3",
     "split": "^1.0.0"
   }
 }

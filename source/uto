@@ -1,0 +1,8 @@
+#! /usr/bin/env node
+
+const uto = require('./index');
+
+const format = require('./formatters/simple');
+
+process.stdin.setEncoding('utf8');
+format(uto(process.stdin));
