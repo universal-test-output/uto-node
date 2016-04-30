@@ -1,0 +1,28 @@
+% uto v1.0
+
+% count 6
+
+. nice. a passing test
+
+! woops! this one failed!
+  " comments are attached to whatever line preceded
+  " and can span multiple lines
+
+" comments don't have to be indented (nothing does actually). this comment still applies to the failure above
+
+? pending. this lets you know the test was skipped on purpose
+
+. another passing test
+
+( start a group
+  % count 3
+  . assert 1 + 1 == 2
+
+  ( nested group
+    " groups can be nested, but please don't get carried away
+  )
+
+  ! assert 0 == 1
+) end group
+
+. one more passing test
