@@ -19,11 +19,22 @@ module.exports = function (source) {
 
 	const stream = new EventEmitter();
 
+	let allowVersionPragma = false;
+
 	stream.on('pragma', function (payload) {
 		const [ pragmaType, pragmaArgument ] = payload.split(' ');
 
 		switch (pragmaType) {
 			case 'uto':
+				if (!allowVersionPragma) {
+					stream.emit('error', 'Version pragma must be emitted only once');
+				}
+
+				if (pragmaArgument !== 'v1.0') {
+					stream.emit('error', `Unknown UTO specification version: ${pragmaArgument}`);
+				}
+
+				allowVersionPragma = false;
 				break;
 			case 'count':
 				currentGroup.incrementExpected(parseInt(pragmaArgument, 10));
@@ -52,8 +63,16 @@ module.exports = function (source) {
 	});
 
 	stream.on('close', function (payload) {
-		stack.pop();
-		currentGroup = stack[stack.length - 1];
+		if (currentGroup.isValid()) {
+			stack.pop();
+			currentGroup = stack[stack.length - 1];
+
+			if (!currentGroup) {
+				stream.emit('error', 'Group closed without being opened');
+			}
+		} else {
+			stream.emit('error', 'Group closed without making expected number of assersions');
+		}
 	});
 
 	source.pipe(split(null, function (line) {
@@ -62,12 +81,27 @@ module.exports = function (source) {
 		} else {
 			return undefined;
 		}
-	})).on('data', function (line) {
+	})).once('data', function (line) {
+		const payload = line.substring(1).trim();
+		const [ pragmaType, pragmaArgument ] = payload.split(' ');
+
+		if (pragmaType !== 'uto') {
+			stream.emit('error', 'Version pragma must come first');
+		}
+
+		allowVersionPragma = true;
+	}).on('data', function (line) {
 		const eventType = typeLookups[line[0]];
 		const payload = line.substring(1).trim();
 
 		stream.emit(eventType, payload);
 	}).on('end', function () {
+		if (stack.length !== 1) {
+			stream.emit('error', 'Group opened without being closed');
+		} else if (!currentGroup.isValid()) {
+			stream.emit('error', 'Input terminated without passing expected number of assersions');
+		}
+
 		stream.emit('end');
 	});
 
