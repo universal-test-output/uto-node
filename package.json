@@ -15,6 +15,11 @@
   "bugs": {
     "url": "https://github.com/universal-test-output/uto-node/issues"
   },
+  "uto": {
+    "versions": [
+      "v1.0"
+    ]
+  },
   "main": "source/index.js",
   "bin": {
     "uto": "source/uto"

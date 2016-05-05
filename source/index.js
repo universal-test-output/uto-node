@@ -1,6 +1,8 @@
 const EventEmitter = require('events');
 const split = require('split');
 
+const supportedVersions = require('../package').uto.versions;
+
 const Group = require('./group');
 
 const typeLookups = {
@@ -30,7 +32,7 @@ module.exports = function (source) {
 					stream.emit('error', 'Version pragma must be emitted only once');
 				}
 
-				if (pragmaArgument !== 'v1.0') {
+				if (supportedVersions.indexOf(pragmaArgument) === -1) {
 					stream.emit('error', `Unknown UTO specification version: ${pragmaArgument}`);
 				}
 
