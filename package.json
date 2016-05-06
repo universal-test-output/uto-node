@@ -1,6 +1,6 @@
 {
   "name": "uto-node",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Universal Test Output consumer and summarizer",
   "author": "Thomas Ingram",
   "license": "MIT",
